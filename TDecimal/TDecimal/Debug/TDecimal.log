@@ -1,0 +1,10 @@
+﻿  TDecimal.cpp
+c:\users\home\documents\visual studio 2015\projects\tdecimal\tdecimal\tdecimal.cpp(67): warning C4018: '<': signed/unsigned mismatch
+c:\users\home\documents\visual studio 2015\projects\tdecimal\tdecimal\tdecimal.cpp(72): warning C4018: '<': signed/unsigned mismatch
+c:\users\home\documents\visual studio 2015\projects\tdecimal\tdecimal\tdecimal.cpp(78): warning C4018: '<': signed/unsigned mismatch
+c:\users\home\documents\visual studio 2015\projects\tdecimal\tdecimal\tdecimal.cpp(103): warning C4018: '<': signed/unsigned mismatch
+c:\users\home\documents\visual studio 2015\projects\tdecimal\tdecimal\tdecimal.cpp(105): warning C4018: '<': signed/unsigned mismatch
+c:\users\home\documents\visual studio 2015\projects\tdecimal\tdecimal\tdecimal.cpp(120): warning C4018: '<': signed/unsigned mismatch
+c:\users\home\documents\visual studio 2015\projects\tdecimal\tdecimal\tdecimal.cpp(122): warning C4018: '<': signed/unsigned mismatch
+c:\users\home\documents\visual studio 2015\projects\tdecimal\tdecimal\tdecimal.cpp(156): warning C4715: 'TDecimal::Compare': not all control paths return a value
+  TDecimal.vcxproj -> C:\Users\home\Documents\Visual Studio 2015\Projects\TDecimal\Debug\TDecimal.exe
