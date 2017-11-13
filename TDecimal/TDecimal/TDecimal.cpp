@@ -20,7 +20,7 @@ public:
 	enum { SIZE = 100 };
 
 protected:
-	unsigned char val[SIZE];
+	unsigned char val[SIZE] = {0};
 	unsigned size;
 
 public:
@@ -38,12 +38,11 @@ public:
 	{
 		size = 0;
 
-		while (value)
+		do
 		{
 			val[size++] = value % 10;//записываем меньшую цифру в меньший индекс 
 			value /= 10;//отсекаем меньшую цифру
-		}
-
+		} while (value);
 		return *this;
 	}
 
@@ -64,19 +63,8 @@ public:
 		a = *this;
 		b = dec;
 
-		if ((Compare(0) == "=") && (Compare(dec) == "="))//если оба числа равны 0, то результат 0
-			return "0";
-		
-		else if (a.size > b.size)//если a длиннее b 
-			for (int i = b.size;i < a.size;i++)//заполняем пустые ячейки b нулями
-				b.val[i] = 0;
-		
-		else//если b длиннее a
-		{
-			for (int i = a.size ;i < b.size;i++)//заполняем пустые ячейки a нулями
-				a.val[i] = 0;
+		if (b.size>a.size)//если b длиннее a
 			a.size = b.size;//длина массива результата равна длине b
-		}
 		
 		int c = 0;
 		for (int i = 0;i < a.size;++i)
@@ -95,59 +83,47 @@ public:
 
 	TDecimal operator - (const TDecimal& dec)//оператор вычитания
 	{
-		TDecimal a, b;
+		TDecimal a;
 		int c = 0;
-
-		if (Compare(dec) == "=")//если два числа равны, то выводим 0
-			return "0";
-		
-		else if (Compare(dec) == "<")//если первое число меньше второго
+		try
 		{
-			a = dec;
-			for (int i = size;i < a.size;i++)//заполняем пустые ячейки меньшего нулями
-			val[i] = 0;
+			if (Compare(dec) == -1)//если первое число меньше второго
+			{
+				throw 0;
+			}
+
+			a = *this;
 			for (int i = 0;i < a.size;++i)
 			{
-				c = c + a.val[i] - val[i] + 10;//считаем разность между младшими разрядами числа, добавив 10 
+				c = c + a.val[i] - dec.val[i] + 10;//считаем разность между младшими разрядами числа, добавив 10
 				a.val[i] = c % 10;//оставляем нужную нам часть
 				if (c <= 9)//если занять 10 из старшего разряда нам было необходимо
 					c = -1;//отнимаем единицу из старшего разряда
 				else c = 0;//если нет, то все оставляем без изменений
 			}
-			while ((a.val[a.size-1] == 0) && (a.size>0))//убираем незначащие нули из результата
-				--a.size;
+
+			if (a.size > 1)
+				while ((a.val[a.size - 1] == 0) && (a.size > 0))//убираем незначащие нули из результата
+					--a.size;
+
 			return a;
 		}
-
-		else//если второе число меньше первого
+		catch(int r)
 		{
-			a = *this;
-			b = dec;
-			for (int i = b.size;i < a.size;i++)//заполняем пустые ячейки меньшего нулями
-				b.val[i] = 0;
-			for (int i = 0;i < a.size;++i)
-			{
-				c = c + a.val[i] - b.val[i] + 10;//считаем разность между младшими разрядами числа, добавив 10
-				a.val[i] = c % 10;//оставляем нужную нам часть
-				if (c <= 9)//если занять 10 из старшего разряда нам было необходимо
-					c = -1;//отнимаем единицу из старшего разряда
-				else c = 0;//если нет, то все оставляем без изменений
-			}
-			while ((a.val[a.size - 1] == 0) && (a.size>0))//убираем незначащие нули из результата
-				--a.size;
-			return a;
+			cout << "Error! Invalid values!" << endl;
+			return r;
 		}
 	}
 
-	char* TDecimal::Compare (const TDecimal& dec)//операция сравнения двух чисел
+	int TDecimal::Compare (const TDecimal& dec)//операция сравнения двух чисел
 	{
 		int i;
 
 		if (size > dec.size)//если число длиннее, то больше
-			return ">";
+			return 1;
 		
 		else if (size < dec.size)//если число короче, то меньше
-			return "<";
+			return -1;
 		
 		else//если длина чисел одинакова
 		{
@@ -158,35 +134,29 @@ public:
 				--i;
 			}
 			 if (i == -1)//если мы прошли все разряды, то числа равны
-				return "=";
+				return 0;
 			else if (val[i] > dec.val[i])//если первый встретившийся нам разряд больше, то число больше
-				return ">";
+				return 1;
 			else if (val[i] < dec.val[i])//если первый встретившийся нам разряд меньше, то число меньше
-				return "<";
+				return -1;
 		}
 	}
 
 	friend ostream& operator << (ostream& os, const TDecimal& digit)//оператор вывода
 	{
-		for (unsigned i = digit.size - 1; i < digit.size; --i)//вывод в обратном порядке
+		for (int i = digit.size - 1; i >=0; --i)//вывод в обратном порядке
 		{
 			os << (unsigned)digit.val[i];
 		}
 		return os;
 	}
 
-	void TDecimal::Read(TDecimal& dec)//чтение с клавиатуры
-	{
-		cout << "A: ";
+	void TDecimal::Read()//чтение с клавиатуры
+	{	
 		cin >> x;
 		TDecimal m(x);
 		cout << endl;
-		cout << "B: ";
-		cin >> y;
-		TDecimal n(y);
-		cout << endl;
 		*this = m;
-		dec = n;
 	}
 
 	void TDecimal::Display(TDecimal& dec)//вывод на экран
@@ -222,16 +192,28 @@ int main()
 		cin >> k;
 		switch (k)
 		{
-			case 1:		a.Read(b);		break;
+			case 1:	
+			{
+				cout << "A: ";
+				a.Read();
+				cout << "B: ";
+				b.Read();
+				break;
+			}
 			case 2:		a.Display(b);	break;
 			case 3:		cout << a.toString(b) << endl;	break;
 			case 4:		cout << "Summ: " << (a + b) << endl; break;
 			case 5:		cout << "Difference: " << (a - b) << endl; break;
-			case 6: 
+			case 6:		
 			{
-				if ((a.Compare(0) == "=") && (b.Compare(0) == "="))
-				cout << "0=0" << endl;
-			else cout << a << a.Compare(b) << b << endl; break;
+				char* n;
+				if (a.Compare(b) == 1)
+					n = ">";
+				else if (a.Compare(b) == 0)
+					n = "=";
+				else n = "<";
+				cout << a << n << b << endl; 
+				break;
 			}
 			case 0: cout << "Now exit"; break;
 			default:	cout << "error inputing,try again" << endl;
