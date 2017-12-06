@@ -44,9 +44,9 @@ public:
 	void DelHead();
 	void DelTail();
 
-	void AddTail();
+	void AddTail(T n);
 
-	void AddHead();
+	void AddHead(T n);
 
 	void Print();
 	
@@ -70,15 +70,11 @@ Deque<T>::~Deque()
 }
 
 template <typename T>
-void Deque<T>::AddHead()//добавление элемента в начало
+void Deque<T>::AddHead(T n)//добавление элемента в начало
 {
 	List<T> * temp = new List<T>;
 
 	temp->prev = nullptr;
-
-	T n;//ввод значения
-	cout << "Input new elem: " << endl;
-	cin >> n;
 
 	temp->val = n;//присваиваем новое значение
 	temp->next = Head;//следующий элемент становится головой 
@@ -95,15 +91,11 @@ void Deque<T>::AddHead()//добавление элемента в начало
 }
 
 template <typename T>
-void Deque<T>::AddTail()//добавление элемента в конец
+void Deque<T>::AddTail(T n)//добавление элемента в конец
 {
 	List<T> * temp = new List<T>;
 
 	temp->next = nullptr;
-
-	T n;//ввод нового значения
-	cout << "Input new elem: "<< endl;
-	cin >> n;
 
 	temp->val = n;//присваиваем новое значение
 	temp->prev = Tail;//предыдущий элемент становится хвостом
@@ -151,13 +143,12 @@ void Deque<T>::DelTail()//удаление элемента с конца
 
 	if (Count != 1)//если в деке больше одного элемента 
 		PrevDel->next = AfterDel;
+	else 
+		Head = nullptr;
 
 	Tail = PrevDel;
 
 	delete Del;
-
-	if (Count == 1)
-		Head = nullptr;
 
 	Count--;
 }
@@ -210,7 +201,7 @@ void Deque<T>::DelAll()//удалить все
 
 
 template <typename T>
-void Program(T A)//меню
+void Program(Deque<T> A)//меню
 {
 	int k;
 	do {
@@ -229,8 +220,18 @@ void Program(T A)//меню
 		switch (k)
 		{
 		case 1: A.GetSize(); break;
-		case 2: A.AddTail(); break;
-		case 3: A.AddHead(); break;
+		case 2: {
+			T n;//ввод значения
+			cout << "Input new elem: " << endl;
+			cin >> n;
+			A.AddTail(n);
+		} break;
+		case 3: {
+			T n;//ввод значения
+			cout << "Input new elem: " << endl;
+			cin >> n;
+			A.AddHead(n);
+		} break;
 		case 4: A.DelHead(); break;
 		case 5: A.DelTail(); break;
 		case 6: A.GetHead(); break;
