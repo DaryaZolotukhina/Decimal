@@ -22,17 +22,17 @@ struct MyStruct {//произвольная структура
 };
 
 template <typename T>
-struct deque {//структура дек
+struct List {//структура дек
 
 	T val;
-	deque *next, *prev;
+	List *next, *prev;
 
 };
 
 template <typename T>
 class Deque {
 
-	deque<T> *Head, *Tail;
+	List<T> *Head, *Tail;
 	int Count;
 
 public:
@@ -53,14 +53,12 @@ public:
 	void Deque<T>::GetHead();
 	void Deque<T>::GetTail();
 	void Deque<T>::GetSize();
-
-	void Deque<T>::Program();
 };
 
 template <typename T>
 Deque<T>::Deque()
 {
-	Head = Tail = 0;
+	Head = Tail = nullptr;
 	Count = 0;
 }
 
@@ -74,9 +72,9 @@ Deque<T>::~Deque()
 template <typename T>
 void Deque<T>::AddHead()//добавление элемента в начало
 {
-	deque<T> * temp = new deque<T>;
+	List<T> * temp = new List<T>;
 
-	temp->prev = 0;
+	temp->prev = nullptr;
 
 	T n;//ввод значения
 	cout << "Input new elem: " << endl;
@@ -85,10 +83,10 @@ void Deque<T>::AddHead()//добавление элемента в начало
 	temp->val = n;//присваиваем новое значение
 	temp->next = Head;//следующий элемент становится головой 
 
-	if (Head!=0)//если уже был головной элемент, то его указатель prev должен ссылаться на вновь созданный элемент
+	if (Head!= nullptr)//если уже был головной элемент, то его указатель prev должен ссылаться на вновь созданный элемент
 		Head->prev = temp;
 
-	if (Tail == 0)//если хвост пустой, то после добавления нового элемента он должен ссылаться на него
+	if (Tail == nullptr)//если хвост пустой, то после добавления нового элемента он должен ссылаться на него
 		Tail = temp;
 
 	Head = temp;//голове присваиваем новое значение
@@ -99,9 +97,9 @@ void Deque<T>::AddHead()//добавление элемента в начало
 template <typename T>
 void Deque<T>::AddTail()//добавление элемента в конец
 {
-	deque<T> * temp = new deque<T>;
+	List<T> * temp = new List<T>;
 
-	temp->next = 0;
+	temp->next = nullptr;
 
 	T n;//ввод нового значения
 	cout << "Input new elem: "<< endl;
@@ -110,10 +108,10 @@ void Deque<T>::AddTail()//добавление элемента в конец
 	temp->val = n;//присваиваем новое значение
 	temp->prev = Tail;//предыдущий элемент становится хвостом
 
-	if (Tail != 0)//если уже был элемент в хвосте, то его указатель next должен ссылаться на вновь созданный элемент
+	if (Tail != nullptr)//если уже был элемент в хвосте, то его указатель next должен ссылаться на вновь созданный элемент
 		Tail->next = temp;
 
-	if (Head == 0)//если голова пустая, то после добавления нового элемента она должена ссылаться на него
+	if (Head == nullptr)//если голова пустая, то после добавления нового элемента она должена ссылаться на него
 		Head  = temp;
 
 		Tail = temp;//хвосту присваиваем новое значение
@@ -124,10 +122,12 @@ void Deque<T>::AddTail()//добавление элемента в конец
 template <typename T>
 void Deque<T>::DelHead()//удаление элемента с начала
 {
-	deque<T> * Del = Head;//удаляемый элемент - голова
-	deque<T> * AfterDel = Del->next;
+	List<T> * Del = Head;//удаляемый элемент - голова
+	List<T> * AfterDel = Del->next;
 	Head = AfterDel;//головой становится следующий за удаляемым элемент
 	delete Del;//удаляем
+	if (Count == 1)
+		Tail = nullptr;
 
 	Count--;
 }
@@ -136,7 +136,7 @@ template <typename T>
 void Deque<T>::DelTail()//удаление элемента с конца
 {
 	int i = 1;
-	deque<T> * Del = Head;//удаляемый элемент - голова
+	List<T> * Del = Head;//удаляемый элемент - голова
 
 	while (i < Count)// Доходим до элемента, который удаляется
 	{
@@ -145,9 +145,9 @@ void Deque<T>::DelTail()//удаление элемента с конца
 	}
 
 	// Доходим до элемента, который предшествует удаляемому
-	deque<T> * PrevDel = Del->prev;
+	List<T> * PrevDel = Del->prev;
 	// Доходим до элемента, который следует за удаляемым
-	deque<T> * AfterDel = Del->next;
+	List<T> * AfterDel = Del->next;
 
 	if (Count != 1)//если в деке больше одного элемента 
 		PrevDel->next = AfterDel;
@@ -155,6 +155,9 @@ void Deque<T>::DelTail()//удаление элемента с конца
 	Tail = PrevDel;
 
 	delete Del;
+
+	if (Count == 1)
+		Head = nullptr;
 
 	Count--;
 }
@@ -165,24 +168,29 @@ void Deque<T>::Print()//печать
 	cout << "Deque:" << endl;
 	if (Count != 0)
 	{
-		deque<T> * temp = Head;
-		while (temp != 0)
+		List<T> * temp = Head;
+		while (temp != nullptr)
 		{
 			cout<<temp->val<<endl;
 			temp = temp->next;
 		}
 	}
+	else cout << "Deque is empty" << "\n";
 }
 
 template <typename T>
 void Deque<T>::GetHead()//полученик элемента с начала
 {
-	cout << Head->val << "\n";
+	if (Count==0)
+		cout<<"Deque is empty"<< "\n";
+	else cout << Head->val << "\n";
 }
 
 template <typename T>
 void Deque<T>::GetTail()//получение элемента с конца
 {
+	if (Count == 0)
+		cout << "Deque is empty" << "\n";
 	cout << Tail->val << "\n";
 }
 
@@ -202,7 +210,7 @@ void Deque<T>::DelAll()//удалить все
 
 
 template <typename T>
-void Deque<T>::Program()//меню
+void Program(T A)//меню
 {
 	int k;
 	do {
@@ -220,14 +228,14 @@ void Deque<T>::Program()//меню
 		cin >> k;
 		switch (k)
 		{
-		case 1: GetSize(); break;
-		case 2: AddTail(); break;
-		case 3: AddHead(); break;
-		case 4: DelHead(); break;
-		case 5: DelTail(); break;
-		case 6: GetHead(); break;
-		case 7: GetTail(); break;
-		case 8: Print(); break;
+		case 1: A.GetSize(); break;
+		case 2: A.AddTail(); break;
+		case 3: A.AddHead(); break;
+		case 4: A.DelHead(); break;
+		case 5: A.DelTail(); break;
+		case 6: A.GetHead(); break;
+		case 7: A.GetTail(); break;
+		case 8: A.Print(); break;
 		case 0: cout << "Now exit"; break;
 		default:	cout << "error inputing,try again" << endl;
 		}
@@ -258,8 +266,8 @@ int main() {
 	cin >> k;
 	switch (k)
 	{
-	case 1: A.Program();break;
-	case 2: B.Program();break;
-	case 3: C.Program();break;
+	case 1: Program(A);break;
+	case 2: Program(B);break;
+	case 3: Program(C);break;
 	}
 }
