@@ -29,7 +29,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Deque.cpp">
+    <ClCompile Include="main%28%29.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
