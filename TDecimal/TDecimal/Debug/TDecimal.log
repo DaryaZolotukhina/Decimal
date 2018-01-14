@@ -1,5 +1,1 @@
-﻿  main().cpp
-c:\users\home\documents\git\decimal\tdecimal\tdecimal\decimal.h(63): warning C4018: '<': signed/unsigned mismatch
-c:\users\home\documents\git\decimal\tdecimal\tdecimal\decimal.h(89): warning C4018: '<': signed/unsigned mismatch
-c:\users\home\documents\git\decimal\tdecimal\tdecimal\decimal.h(145): warning C4715: 'TDecimal::Compare': not all control paths return a value
-  TDecimal.vcxproj -> C:\Users\home\Documents\GIT\Decimal\TDecimal\Debug\TDecimal.exe
+﻿  TDecimal.vcxproj -> C:\Users\home\Documents\GIT\Decimal\TDecimal\Debug\TDecimal.exe
