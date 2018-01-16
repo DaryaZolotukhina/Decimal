@@ -15,7 +15,7 @@ b) Реализация дека с помощью списка.*/
 #include <string>
 #include <sstream>
 #include "Deque.cpp"
-#include "Deque.h"
+
 
 using namespace std;
 

@@ -9,7 +9,6 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include "decimal.h"
 #include "decimal.cpp"
 
 using namespace std;
