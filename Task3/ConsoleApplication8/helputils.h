@@ -65,7 +65,8 @@ bool CorrectName(string name)
 {
 	int i = 0;
 	bool goodsm = true;
-	for (int i = 0; (i < name.length() && goodsm);i++)
+	for (size_t
+		i = 0; (i < name.length() && goodsm);i++)
 		goodsm = CorrectSymbol(name[i]);
 	return goodsm;
 }
@@ -91,28 +92,6 @@ string InputFileName()
 	} while (true);
 
 	return filename;
-}
-
-// чтение строки из бинарного файла
-string StringFromBinFile(ifstream& in)
-{
-	string result;
-	size_t len_name;
-	in.read((char*)&len_name, sizeof(len_name)); // чтение длины записанной строки
-	char * buf = new char[len_name];         // Выделение буфера для чтения
-	in.read(buf, len_name);// Чтение 
-	result = buf;                       // Присвоение считанной строки 
-	delete[]buf;               // Освобождение памяти
-
-	return result;
-}
-
-// запись строки в бинарный файл
-void StringInBinFile(ofstream& os, string str)
-{
-	size_t len_name = str.length() + 1;  // длина 
-	os.write((char*)&len_name, sizeof(int)); // запись длины
-	os.write(str.c_str(), len_name);  // запись информации
 }
 
 

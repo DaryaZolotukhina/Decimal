@@ -1,11 +1,4 @@
 #include "Operation.h"
-#include <stdio.h>
-#include <conio.h>
-#include <sstream>
-#include <math.h>
-#include <iostream>
-#include <string>
-#include <iomanip>
 
 template <class Type> 
 Task<Type>::Task() {}
@@ -40,6 +33,48 @@ template <class Type>
 bool Task<Type>::Is_empty()
 	{
 		return (vect.size() == 0);
+	}
+
+	// ввод из файла
+	// Type(*f)(ifstream&) - указатель на функцию, которая считывает одну структуру из файла 
+template <class Type>
+bool Task<Type>::ReadFromFile(Type(*f)(ifstream&))
+	{
+		string newfname = InputFileName();
+		std::ifstream input;
+
+		input.open(newfname);
+
+		if (!input)
+		{
+			cout << "Не удалось открыть файл" << endl;
+			return false;
+		}
+		else
+		{
+			while (!input.eof())
+			{
+				vect.push_back(f(input));
+			}
+			vect.erase(vect.begin() + vect.size() - 1);
+
+			input.close();
+			return true;
+		}
+	}
+
+	// ввод с экрана
+	//Type(*f)() - указатель на функцию, которая вводит одну структуру с консоли
+template <class Type>
+void Task<Type>::ReadFromScreen(Type(*f)())
+	{
+		int n;
+		Type elem;
+		do
+		{
+			vect.push_back(f());
+			n = InputNumber(0, 1, "Вы хотите добавить элемент? (1 - да, 0 - нет)\nВаш выбор: ");
+		} while (n != 0);
 	}
 
 	// линейный поиск
@@ -79,142 +114,42 @@ vector<Type> Task<Type>::BinarySearch(Type find_element, bool(*Compare)(Type, Ty
 	return NewVect;
 }
 
-//сортировка
-template <class Type>
-vector<Type> Task<Type>::Sort(bool(*Compare)(Type, Type))
-{
-	vector<Type> NewVect;
-
-	sort(vect.begin(), vect.end(), Compare);
-	NewVect = vect;
-
-	return NewVect;
-}
 // вывод в файл
-// void(*f) (Type) - указатель на функцию, которая записывает одну структуру в файл  
+// void(*f) (Type) - указатель на функцию, которая записывает одну структуру в файл 
 template <class Type>
-void Task<Type>::OutputFile(vector<Type> items, void(*f)(Type, ofstream&), string newfname)
+void OutputFile(vector<Type> items, string(*f)(Type, int))
 {
-	ofstream fout(newfname, ios::binary);
+	string newfname = InputFileName();
+	ofstream fout(newfname);
 	if (fout)
 	{
-		int i = vect.size();
-		fout.write((char*)&i, sizeof(int));
 		vector<Type>::const_iterator pos;
+		int count = 1;
 		for (pos = items.begin(); pos != items.end(); ++pos)
 		{
-			f(*pos, fout);
+			fout << f(*pos, count) << ' ';
+			count++;
 		}
+		cout << endl << "Файл заполнен!" << endl;
 		fout.close();
-	}
-}
-
-// вывод на экран
-template <class Type>
-void Task<Type>::OutputScreen(vector<Type> items, void(*f)(Type), void(*Header)())
-{
-	vector<Type>::const_iterator pos;
-	int count = 1;
-	Header();
-	for (pos = items.begin(); pos != items.end(); ++pos)
-	{
-		cout << setw(4) << setiosflags(ios::left) << count << "|";
-		f(*pos);
-		++count;
-	}
-}
-
-//вычисление заработной платы сотрудников за определенный период
-template <class Type>
-vector<int> Task<Type>::SumSalary(int type)
-{
-	int sum;
-	vector<int> NewVect;
-	int a;
-	switch (type)
-	{
-	case 1:
-		a = 3;
-		break;
-	case 2:
-		a = 6;
-		break;
-	case 3:
-		a = 12;
-		break;
-	}
-	for (auto iter = vect.begin(); iter != vect.end(); iter++)
-	{
-		sum = a * CalcSumSalary(*iter);
-		NewVect.push_back(sum);
-	}
-	return NewVect;
-}
-
-// вывод заголовков при вычисление заработной платы за определенный период
-void OutputScreenHeaderSumSalary()
-{
-	cout << setw(11) << setiosflags(ios::left) << "Табельный №" << "|";
-	cout << setw(12) << setiosflags(ios::left) << "Номер отдела" << "|";
-	cout << setw(10) << setiosflags(ios::left) << "Фамилия" << "|";
-	cout << setw(10) << setiosflags(ios::left) << "Сумма" << endl;
-	cout << "------------------------------------------------" << endl;
-}
-
-//вывод заработной платы за определенный период на экран
-template <class Type>
-void Task<Type>::OutputScreenSalary(vector<int> items)
-{
-	vector<int>::const_iterator pos;
-	for (auto iter = vect.begin(); iter != vect.end(); iter++)
-	{
-		cout << setw(11) << setiosflags(ios::left) << (*iter).pers_number << "|";
-		cout << setw(12) << setiosflags(ios::left) << (*iter).depart_number << "|";
-		cout << setw(10) << setiosflags(ios::left) << (*iter).surname << "|";
-	}
-	for (pos = items.begin(); pos != items.end(); ++pos)
-	{
-		cout << setw(10) << setiosflags(ios::left) << (*pos) << endl;
-	}
-}
-
-// ввод из файла
-// Type(*f)(ifstream&) - указатель на функцию, которая считывает одну структуру из файла 
-template <class Type>
-void Task<Type>::ReadFromFile(Type(*f)(ifstream&), string newfname)
-{
-	std::ifstream input;
-
-	input.open(newfname, ios::binary);
-
-	if (!input)
-	{
-		cout << "Не удалось открыть файл" << endl;
 	}
 	else
 	{
-		int size;
-		Type elem;
-		input.read((char*)&size, sizeof(int));
-		for (int i = 0; i < size; i++)
-		{
-			vect.push_back(f(input));
-		}
-
-		input.close();
+		cout << "Файл не заполнен!" << endl;
 	}
 }
-
-// ввод с экрана
-//Type(*f)() - указатель на функцию, которая вводит одну структуру с консоли
+// вывод на экран
+// void(*f) (Type) - указатель на функцию, которая считывает одну структуру на экран 
 template <class Type>
-void Task<Type>::ReadFromScreen(Type(*f)())
+void OutputScreen(vector<Type> items, void(*f) (Type))
 {
-	int n;
-	Type elem;
-	do
+	vector<Type>::const_iterator pos;
+	int count = 1;
+	for (pos = items.begin(); pos != items.end(); ++pos)
 	{
-		vect.push_back(f());
-		n = InputNumber(0, 1, "Вы хотите добавить элемент? (1 - да, 0 - нет)\nВаш выбор: ");
-	} while (n != 0);
+		cout << "Запись № " << count << endl;
+		f(*pos);
+		++count;
+	}
+	cout << "Конец вывода!" << endl;
 }

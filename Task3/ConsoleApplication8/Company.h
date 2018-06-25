@@ -9,33 +9,76 @@
 #include <iostream>
 #include <string>
 #include "HelpUtils.h"
-#include "MyDate.h"
 //using namespace std;
+
+//подтип дата
+class MyDate {
+
+	// проверка является ли год високосным
+	bool IsLeap(int year);
+
+	// проверка даты на корректность
+	bool CorrectDate(int day, int month, int year, string &message);
+public:
+	// день
+	int day;
+	// месяц
+	int month;
+	// год
+	int year;
+
+	// конструктор по умолчанию
+	MyDate();
+
+	// ввод даты с консоли
+	void InputDate();
+
+	// перевод даты в строку (для последующей записи в файл)
+	string ToString();
+
+	//извлечение структуры "дата" из строки 
+	// Формат:
+	// день месяц год
+	MyDate FromString(string str);
+
+	// перегруженный оператор равенства
+	bool operator == (const MyDate &c);
+
+	// конструктор копирования
+	MyDate& operator = (MyDate c);
+
+	// перегруженный оператор больше
+	bool operator > (const MyDate &c);
+
+	// перегруженные оператор меньше
+	bool operator < (const MyDate &c);
+
+};
 
 class Worker {
 public:
 	// табельный номер
-	__int32 pers_number;
+	int pers_number;
 	// номер отдела
-	__int32 depart_number;
+	int depart_number;
 	// фамилия
 	string surname;
 	// оклад
-	__int32 salary;
+	int salary;
 	// дата поступления
-	string date;
+	MyDate date;
 	// процент надбавки
-	__int32 percent;
+	int percent;
 	// подоходный налог
-	__int32 tax;
+	int tax;
 	// количество отработанных дней
-	__int32 days_worked;
+	int days_worked;
 	// количество дней в месяце
-	__int32 days_month;
+	int days_month;
 	// начислено
-	__int32 accured;
+	int accured;
 	// удержано
-	__int32 withheld;
+	int withheld;
 
 
 	// конструктор по умолчанию
